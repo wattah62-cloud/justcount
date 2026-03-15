@@ -1,0 +1,132 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="justcount.Pages.ExpensePage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#ECE2D5">
+
+    <Grid RowDefinitions="Auto,*">
+        <Border BackgroundColor="{StaticResource Primary}"
+                HeightRequest="88"
+                Padding="24,18,24,20"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 0,0,24,24">
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="16">
+                <VerticalStackLayout Spacing="0">
+                    <Button Text="&lt;"
+                            Clicked="OnBackClicked"
+                            BackgroundColor="#33FFFFFF"
+                            HorizontalOptions="Start"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            CornerRadius="22"
+                            Padding="0" />
+                    <Label Grid.Column="1"
+                           Text="LOG NEW EXPENSE"
+                           HorizontalTextAlignment="Center"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="20"
+                           TextColor="White" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20"
+                                 Spacing="18">
+                <Border BackgroundColor="{StaticResource LedgerCard}"
+                        Padding="18"
+                        Stroke="{StaticResource LedgerLine}"
+                        StrokeShape="RoundRectangle 18">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Upload Expense"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="22" />
+                        <Label Text="Add one expense, then keep choosing another category until you're done."
+                               TextColor="{StaticResource LedgerMuted}" />
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Category" FontFamily="OpenSansSemibold" />
+                            <Picker x:Name="CategoryPicker"
+                                    Title="Choose a category" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Amount" FontFamily="OpenSansSemibold" />
+                            <Entry x:Name="AmountEntry"
+                                   Placeholder="Enter amount"
+                                   Keyboard="Numeric" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Date" FontFamily="OpenSansSemibold" />
+                            <DatePicker x:Name="ExpenseDatePicker"
+                                        Format="dd MMM yyyy"
+                                        DateSelected="OnExpenseDateSelected" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Notes" FontFamily="OpenSansSemibold" />
+                            <Editor x:Name="NotesEditor"
+                                    Placeholder="Add optional notes"
+                                    AutoSize="TextChanges"
+                                    HeightRequest="120" />
+                        </VerticalStackLayout>
+
+                        <Label x:Name="StatusLabel"
+                               IsVisible="False"
+                               TextColor="{StaticResource LedgerSuccess}"
+                               FontFamily="OpenSansSemibold" />
+
+                        <Button Text="Add Expense"
+                                Clicked="OnSaveClicked" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border BackgroundColor="{StaticResource LedgerCard}"
+                        Padding="18"
+                        Stroke="{StaticResource LedgerLine}"
+                        StrokeShape="RoundRectangle 18">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Added expenses"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="20" />
+                        <Label x:Name="SelectedDateLabel"
+                               TextColor="{StaticResource LedgerMuted}" />
+                        <CollectionView x:Name="AddedExpensesView"
+                                        SelectionMode="None"
+                                        EmptyView="No expenses added for this date yet.">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          RowDefinitions="Auto,Auto"
+                                          RowSpacing="4"
+                                          Padding="0,0,0,12">
+                                        <Label Text="{Binding Category}"
+                                               FontFamily="OpenSansSemibold" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding AmountText}"
+                                               FontFamily="OpenSansSemibold" />
+                                        <Label Grid.Row="1"
+                                               Text="{Binding NotesText}"
+                                               TextColor="{StaticResource LedgerMuted}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Total amount"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="18" />
+                            <Label x:Name="TotalAmountLabel"
+                                   Grid.Column="1"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="18" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
+

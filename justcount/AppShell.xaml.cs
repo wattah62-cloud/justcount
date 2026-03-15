@@ -1,10 +1,12 @@
-﻿namespace justcount
+using justcount.Pages;
+
+namespace justcount;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        Routing.RegisterRoute(nameof(ExpensePage), typeof(ExpensePage));
     }
 }

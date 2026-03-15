@@ -4,14 +4,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
-
-    <Color x:Key="Primary">#512BD4</Color>
+    <Color x:Key="Primary">#F58A1F</Color>
+    <Color x:Key="Background">#FFFDF8</Color>
+    <Color x:Key="LedgerLine">#D7C9BA</Color>
     <Color x:Key="PrimaryDark">#ac99ea</Color>
     <Color x:Key="PrimaryDarkText">#242424</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>
     <Color x:Key="SecondaryDarkText">#9880e5</Color>
     <Color x:Key="Tertiary">#2B0B98</Color>
-
+    <Color x:Key="LedgerCanvas">#ECE2D5</Color>
+    <Color x:Key="LedgerCard">#FFFDF8</Color>
+    <Color x:Key="LedgerText">#1E1A17</Color>
+    <Color x:Key="LedgerMuted">#7A6F65</Color>
+    <Color x:Key="LedgerSuccess">#4E9B58</Color>
+    <Color x:Key="LedgerChip">#F7EEE4</Color>
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
     <Color x:Key="Magenta">#D600AA</Color>

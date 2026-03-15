@@ -3,12 +3,23 @@
     x:Class="justcount.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:justcount"
-    Title="justcount">
+    xmlns:pages="clr-namespace:justcount.Pages"
+    FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <ShellContent
+            Title="Home"
+            Route="home"
+            ContentTemplate="{DataTemplate pages:HomePage}" />
 
+        <ShellContent
+            Title="History"
+            Route="history"
+            ContentTemplate="{DataTemplate pages:HistoryPage}" />
+
+        <ShellContent
+            Title="Stats"
+            Route="stats"
+            ContentTemplate="{DataTemplate pages:StatsPage}" />
+    </TabBar>
 </Shell>

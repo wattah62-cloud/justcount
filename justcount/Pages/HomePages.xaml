@@ -1,0 +1,88 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="justcount.Pages.HomePage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#ECE2D5">
+
+    <Grid RowDefinitions="Auto,*">
+        <Border BackgroundColor="{StaticResource Primary}"
+                Padding="24,18,24,20"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 0,0,24,24">
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="16">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="JustCount"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="26"
+                           TextColor="White" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,20,20,28"
+                                 Spacing="18">
+
+                <Border BackgroundColor="#FFFFFF"
+                        Padding="18"
+                        Stroke="{StaticResource LedgerLine}"
+                        StrokeShape="RoundRectangle 18">
+                    <Grid ColumnDefinitions="*,Auto"
+                          RowDefinitions="Auto,Auto,Auto,Auto"
+                          RowSpacing="10">
+                        <Label Text="Monthly Summary"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18" />
+                        <Label Grid.Row="1"
+                               Text="Current Month" />
+                        <Label Grid.Row="1"
+                               Grid.Column="1"
+                               Text="{Binding CurrentMonthText}"
+                               FontFamily="OpenSansSemibold" />
+                        <Label Grid.Row="2"
+                               Text="Total Expenses" />
+                        <Label Grid.Row="2"
+                               Grid.Column="1"
+                               Text="{Binding MonthlyExpenseText}"
+                               FontFamily="OpenSansSemibold" />
+                        <Label Grid.Row="3"
+                               Text="Entries" />
+                        <Label Grid.Row="3"
+                               Grid.Column="1"
+                               Text="{Binding MonthlyEntryCountText}"
+                               FontFamily="OpenSansSemibold" />
+                    </Grid>
+                </Border>
+
+                <Border Padding="22"
+                        Stroke="Transparent"
+                        StrokeShape="RoundRectangle 18">
+                    <VerticalStackLayout Spacing="18">
+                        <Label Text="Today's Focus"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18" />
+                        <Label Text="Ready to log your spending for today?"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="34"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Button Text="+"
+                Clicked="OnAddExpenseClicked"
+                Grid.RowSpan="2"
+                WidthRequest="72"
+                HeightRequest="72"
+                FontSize="34"
+                FontFamily="OpenSansSemibold"
+                CornerRadius="36"
+                HorizontalOptions="Center"
+                VerticalOptions="End"
+                Margin="0,0,0,12"
+                ZIndex="10" />
+    </Grid>
+</ContentPage>
