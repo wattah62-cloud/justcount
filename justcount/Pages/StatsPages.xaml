@@ -1,9 +1,121 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="justcount.Pages.StatsPage">
-    <VerticalStackLayout Padding="20">
-        <Label Text="Stats Page" />
-    </VerticalStackLayout>
+             x:Class="justcount.Pages.StatsPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#ECE2D5">
+
+    <Grid RowDefinitions="Auto,*">
+        <Border BackgroundColor="{StaticResource Primary}"
+                HeightRequest="88"
+                Padding="20,18,20,20"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 0,0,24,24">
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="12">
+                <Label Grid.Column="1"
+                       Text="Stats"
+                       HorizontalTextAlignment="Start"
+                       VerticalTextAlignment="Center"
+                       FontFamily="OpenSansSemibold"
+                       FontSize="20"
+                       TextColor="White" />
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="22,18,22,28"
+                                 Spacing="22">
+                <Grid VerticalOptions="Center">
+                    <GraphicsView x:Name="ChartView"
+                                  HeightRequest="188"
+                                  WidthRequest="188"
+                                  HorizontalOptions="Center" />
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding CategorySummaries}"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="2"
+                                         HorizontalItemSpacing="12"
+                                         VerticalItemSpacing="12" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="White"
+                                    Padding="12,8"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 8">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Ellipse WidthRequest="10"
+                                             HeightRequest="10"
+                                             Fill="{Binding DotColor}"
+                                             VerticalOptions="Center" />
+                                    <Label Text="{Binding Category}"
+                                           FontFamily="OpenSansSemibold"
+                                           TextColor="#4A433C"
+                                           VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Border BackgroundColor="White"
+                        Padding="22,18"
+                        Stroke="{StaticResource LedgerLine}"
+                        StrokeShape="RoundRectangle 16">
+                    <Grid ColumnDefinitions="*,Auto"
+                          RowDefinitions="Auto,Auto,Auto"
+                          RowSpacing="10">
+                        <Label Text="Total budget:"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18"
+                               TextColor="#2B251F" />
+                        <Label Grid.Column="1"
+                               Text="{Binding TotalBudgetText}"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18"
+                               TextColor="#2B251F" />
+
+                        <Label Grid.Row="1"
+                               Text="Monthly expense:"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18"
+                               TextColor="#2B251F" />
+                        <Label Grid.Row="1"
+                               Grid.Column="1"
+                               Text="{Binding MonthlyExpenseText}"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18"
+                               TextColor="#2B251F" />
+
+                        <Label Grid.Row="2"
+                               Text="Final balance:"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18"
+                               TextColor="#2B251F" />
+                        <Label Grid.Row="2"
+                               Grid.Column="1"
+                               Text="{Binding FinalBalanceText}"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18"
+                               TextColor="{Binding FinalBalanceColor}" />
+                    </Grid>
+                </Border>
+
+                <Button Text="Edit budget"
+                        Clicked="OnEditBudgetClicked"
+                        HorizontalOptions="Center"
+                        WidthRequest="156"
+                        CornerRadius="24"
+                        BackgroundColor="#E6D8C6"
+                        TextColor="#3E372F"
+                        FontFamily="OpenSansSemibold"
+                        Margin="0,6,0,0" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>
 

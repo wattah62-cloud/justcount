@@ -2,12 +2,13 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using justcount.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace justcount.Pages;
 
 public partial class HomePage : ContentPage, INotifyPropertyChanged
 {
-    private readonly ExpenseService _expenseService;
+    private readonly ExpenseDatabaseService _expenseDatabaseService;
     private string _monthlyExpenseText = "$0.00";
     private string _monthlyEntryCountText = "0";
 
@@ -49,16 +50,14 @@ public partial class HomePage : ContentPage, INotifyPropertyChanged
     public HomePage()
     {
         InitializeComponent();
-        _expenseService = AppServices.ExpenseService;
-        _expenseService.ExpensesChanged += OnExpensesChanged;
+        _expenseDatabaseService = IPlatformApplication.Current!.Services.GetRequiredService<ExpenseDatabaseService>();
         BindingContext = this;
-        RefreshSummary();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        RefreshSummary();
+        await RefreshSummaryAsync();
     }
 
     private async void OnAddExpenseClicked(object sender, EventArgs e)
@@ -66,16 +65,11 @@ public partial class HomePage : ContentPage, INotifyPropertyChanged
         await Shell.Current.GoToAsync(nameof(ExpensePage));
     }
 
-    private void OnExpensesChanged()
-    {
-        MainThread.BeginInvokeOnMainThread(RefreshSummary);
-    }
-
-    private void RefreshSummary()
+    private async Task RefreshSummaryAsync()
     {
         var today = DateTime.Today;
-        MonthlyExpenseText = _expenseService.GetMonthlyTotal(today).ToString("C2");
-        MonthlyEntryCountText = _expenseService.GetMonthlyEntryCount(today).ToString();
+        MonthlyExpenseText = (await _expenseDatabaseService.GetMonthlyTotalAsync(today)).ToString("C2");
+        MonthlyEntryCountText = (await _expenseDatabaseService.GetMonthlyEntryCountAsync(today)).ToString();
     }
 
     private void RaisePropertyChanged([CallerMemberName] string? propertyName = null)

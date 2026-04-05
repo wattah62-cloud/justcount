@@ -1,17 +1,18 @@
 using System.Globalization;
 using justcount.Models;
 using justcount.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace justcount.Pages;
 
 public partial class ExpensePage : ContentPage
 {
-    private readonly ExpenseService _expenseService;
+    private readonly ExpenseDatabaseService _expenseDatabaseService;
 
     public ExpensePage()
     {
         InitializeComponent();
-        _expenseService = AppServices.ExpenseService;
+        _expenseDatabaseService = IPlatformApplication.Current!.Services.GetRequiredService<ExpenseDatabaseService>();
 
         CategoryPicker.ItemsSource = new List<string>
         {
@@ -24,7 +25,12 @@ public partial class ExpensePage : ContentPage
         };
 
         ExpenseDatePicker.Date = DateTime.Today;
-        RefreshExpensesForSelectedDate();
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await RefreshExpensesForSelectedDate();
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
@@ -32,12 +38,12 @@ public partial class ExpensePage : ContentPage
         await Shell.Current.GoToAsync("..");
     }
 
-    private void OnExpenseDateSelected(object sender, DateChangedEventArgs e)
+    private async void OnExpenseDateSelected(object sender, DateChangedEventArgs e)
     {
-        RefreshExpensesForSelectedDate();
+        await RefreshExpensesForSelectedDate();
     }
 
-    private void OnSaveClicked(object sender, EventArgs e)
+    private async void OnSaveClicked(object sender, EventArgs e)
     {
         if (CategoryPicker.SelectedItem is not string category)
         {
@@ -59,20 +65,20 @@ public partial class ExpensePage : ContentPage
             Notes = NotesEditor.Text?.Trim() ?? string.Empty
         };
 
-        _expenseService.AddExpense(item);
+        await _expenseDatabaseService.AddExpenseAsync(item);
 
         AmountEntry.Text = string.Empty;
         NotesEditor.Text = string.Empty;
         CategoryPicker.SelectedItem = null;
 
         ShowStatus("Expense added.", true);
-        RefreshExpensesForSelectedDate();
+        await RefreshExpensesForSelectedDate();
     }
 
-    private void RefreshExpensesForSelectedDate()
+    private async Task RefreshExpensesForSelectedDate()
     {
         var selectedDate = (ExpenseDatePicker.Date ?? DateTime.Today).Date;
-        var filtered = _expenseService.GetExpensesByDate(selectedDate);
+        var filtered = await _expenseDatabaseService.GetExpensesByDateAsync(selectedDate);
 
         AddedExpensesView.ItemsSource = filtered;
         SelectedDateLabel.Text = selectedDate.ToString("dd MMM yyyy", CultureInfo.InvariantCulture);
