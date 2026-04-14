@@ -1,9 +1,209 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="justcount.Pages.HistoryPage">
-    <VerticalStackLayout Padding="20">
-        <Label Text="History Page" />
-    </VerticalStackLayout>
-</ContentPage>
+             x:Name="HistoryRoot"
+             x:Class="justcount.Pages.HistoryPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#ECE2D5">
 
+    <Grid RowDefinitions="Auto,*">
+        <Border BackgroundColor="{StaticResource Primary}"
+                HeightRequest="88"
+                Padding="20,18,20,20"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 0,0,24,24">
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="12">
+                <Label Grid.Column="1"
+                       Text="History"
+                       VerticalTextAlignment="Center"
+                       FontFamily="OpenSansSemibold"
+                       FontSize="20"
+                       TextColor="White" />
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20"
+                                 Spacing="18">
+                <Border BackgroundColor="{StaticResource LedgerCard}"
+                        Padding="18"
+                        Stroke="{StaticResource LedgerLine}"
+                        StrokeShape="RoundRectangle 18">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Choose a day"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="22" />
+                        <Label Text="Tap a date on the calendar to view that day's spending. Dots mean there are records."
+                               TextColor="{StaticResource LedgerMuted}" />
+
+                        <Grid ColumnDefinitions="Auto,*,Auto"
+                              VerticalOptions="Center">
+                            <Button Text="&lt;"
+                                    Clicked="OnPreviousMonthClicked"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    Padding="0"
+                                    CornerRadius="20"
+                                    BackgroundColor="#F3E8DA"
+                                    TextColor="#3E372F" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding DisplayMonthText}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="18" />
+                            <Button Grid.Column="2"
+                                    Text="&gt;"
+                                    Clicked="OnNextMonthClicked"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    Padding="0"
+                                    CornerRadius="20"
+                                    BackgroundColor="#F3E8DA"
+                                    TextColor="#3E372F" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,*,*,*,*,*,*"
+                              ColumnSpacing="6">
+                            <Label Text="Mon" HorizontalTextAlignment="Center" FontFamily="OpenSansSemibold" TextColor="{StaticResource LedgerMuted}" />
+                            <Label Grid.Column="1" Text="Tue" HorizontalTextAlignment="Center" FontFamily="OpenSansSemibold" TextColor="{StaticResource LedgerMuted}" />
+                            <Label Grid.Column="2" Text="Wed" HorizontalTextAlignment="Center" FontFamily="OpenSansSemibold" TextColor="{StaticResource LedgerMuted}" />
+                            <Label Grid.Column="3" Text="Thu" HorizontalTextAlignment="Center" FontFamily="OpenSansSemibold" TextColor="{StaticResource LedgerMuted}" />
+                            <Label Grid.Column="4" Text="Fri" HorizontalTextAlignment="Center" FontFamily="OpenSansSemibold" TextColor="{StaticResource LedgerMuted}" />
+                            <Label Grid.Column="5" Text="Sat" HorizontalTextAlignment="Center" FontFamily="OpenSansSemibold" TextColor="{StaticResource LedgerMuted}" />
+                            <Label Grid.Column="6" Text="Sun" HorizontalTextAlignment="Center" FontFamily="OpenSansSemibold" TextColor="{StaticResource LedgerMuted}" />
+                        </Grid>
+
+                        <CollectionView ItemsSource="{Binding CalendarDays}"
+                                        SelectionMode="None"
+                                        HeightRequest="320">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical"
+                                                 Span="7"
+                                                 HorizontalItemSpacing="6"
+                                                 VerticalItemSpacing="6" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BackgroundColor="{Binding BackgroundColor}"
+                                            Padding="0"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 12"
+                                            MinimumHeightRequest="52">
+                                        <Grid RowDefinitions="Auto,Auto"
+                                              Padding="0,6">
+                                            <Button Text="{Binding DayText}"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{Binding TextColor}"
+                                                    FontFamily="OpenSansSemibold"
+                                                    Padding="0"
+                                                    HeightRequest="34"
+                                                    Clicked="OnCalendarDayClicked"
+                                                    CommandParameter="{Binding .}"
+                                                    IsEnabled="{Binding IsSelectable}" />
+                                            <BoxView Grid.Row="1"
+                                                     WidthRequest="6"
+                                                     HeightRequest="6"
+                                                     CornerRadius="3"
+                                                     HorizontalOptions="Center"
+                                                     VerticalOptions="Start"
+                                                     Color="{Binding MarkerColor}"
+                                                     IsVisible="{Binding HasExpenses}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <Label x:Name="StatusLabel"
+                               IsVisible="False"
+                               FontFamily="OpenSansSemibold" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border BackgroundColor="{StaticResource LedgerCard}"
+                        Padding="18"
+                        Stroke="{StaticResource LedgerLine}"
+                        StrokeShape="RoundRectangle 18">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto"
+                              VerticalOptions="Center">
+                            <Label Text="Daily expenses"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="20" />
+                            <Button Grid.Column="1"
+                                    Text="Add"
+                                    Padding="16,8"
+                                    CornerRadius="18"
+                                    BackgroundColor="#E6D8C6"
+                                    TextColor="#3E372F"
+                                    FontFamily="OpenSansSemibold"
+                                    Clicked="OnAddExpenseClicked" />
+                        </Grid>
+                        <Label x:Name="SelectedDateLabel"
+                               TextColor="{StaticResource LedgerMuted}" />
+
+                        <CollectionView x:Name="HistoryExpensesView"
+                                        SelectionMode="None"
+                                        EmptyView="No expenses were recorded for this date.">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BackgroundColor="#FFF9F2"
+                                            Padding="14"
+                                            Margin="0,0,0,12"
+                                            Stroke="{StaticResource LedgerLine}"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Grid ColumnDefinitions="*,Auto,Auto"
+                                              RowDefinitions="Auto,Auto,Auto"
+                                              RowSpacing="6">
+                                            <Label Text="{Binding Category}"
+                                                   FontFamily="OpenSansSemibold"
+                                                   FontSize="16" />
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding AmountText}"
+                                                   FontFamily="OpenSansSemibold"
+                                                   FontSize="16" />
+
+                                            <Label Grid.Row="1"
+                                                   Grid.ColumnSpan="2"
+                                                   Text="{Binding NotesText}"
+                                                   TextColor="{StaticResource LedgerMuted}" />
+
+                                            <Button Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Text="Modify"
+                                                    Padding="14,8"
+                                                    CornerRadius="18"
+                                                    Clicked="OnModifyClicked"
+                                                    CommandParameter="{Binding .}" />
+                                            <Button Grid.Row="2"
+                                                    Grid.Column="2"
+                                                    Text="Delete"
+                                                    Padding="14,8"
+                                                    CornerRadius="18"
+                                                    BackgroundColor="#F7D7D7"
+                                                    TextColor="#9E3131"
+                                                    Clicked="OnDeleteClicked"
+                                                    CommandParameter="{Binding .}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Total amount"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="18" />
+                            <Label x:Name="TotalAmountLabel"
+                                   Grid.Column="1"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="18" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

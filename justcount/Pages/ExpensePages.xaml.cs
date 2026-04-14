@@ -63,7 +63,7 @@ public partial class ExpensePage : ContentPage
         {
             Category = category,
             Amount = amount,
-            Date = ExpenseDatePicker.Date ?? DateTime.Today,
+            Date = GetSelectedDate(),
             Notes = NotesEditor.Text?.Trim() ?? string.Empty
         };
 
@@ -79,7 +79,7 @@ public partial class ExpensePage : ContentPage
 
     private async Task RefreshExpensesForSelectedDate()
     {
-        var selectedDate = (ExpenseDatePicker.Date ?? DateTime.Today).Date;
+        var selectedDate = GetSelectedDate();
         var filtered = await _expenseDatabaseService.GetExpensesByDateAsync(selectedDate);
 
         AddedExpensesView.ItemsSource = filtered;
@@ -92,5 +92,10 @@ public partial class ExpensePage : ContentPage
         StatusLabel.Text = message;
         StatusLabel.TextColor = isSuccess ? Colors.Green : Colors.Red;
         StatusLabel.IsVisible = true;
+    }
+
+    private DateTime GetSelectedDate()
+    {
+        return ExpenseDatePicker.Date?.Date ?? DateTime.Today;
     }
 }

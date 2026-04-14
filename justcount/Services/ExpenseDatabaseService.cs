@@ -26,6 +26,18 @@ public sealed class ExpenseDatabaseService
         await _database!.InsertAsync(item);
     }
 
+    public async Task UpdateExpenseAsync(ExpenseItem item)
+    {
+        await InitAsync();
+        await _database!.UpdateAsync(item);
+    }
+
+    public async Task DeleteExpenseAsync(ExpenseItem item)
+    {
+        await InitAsync();
+        await _database!.DeleteAsync(item);
+    }
+
     public async Task<List<ExpenseItem>> GetExpensesByDateAsync(DateTime date)
     {
         await InitAsync();
