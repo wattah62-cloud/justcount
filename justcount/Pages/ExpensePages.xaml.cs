@@ -45,6 +45,8 @@ public partial class ExpensePage : ContentPage
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
+        HapticFeedbackService.PerformButtonPress();
+
         if (CategoryPicker.SelectedItem is not string category)
         {
             ShowStatus("Please choose a category.", false);

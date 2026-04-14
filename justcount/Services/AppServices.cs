@@ -1,3 +1,4 @@
+
 namespace justcount.Services;
 
 public static class AppServices
