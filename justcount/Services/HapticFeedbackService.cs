@@ -8,27 +8,10 @@ public static class HapticFeedbackService
     {
         try
         {
-            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-        }
-        catch (FeatureNotSupportedException)
-        {
-            TryFallbackVibration();
+            Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(300));
         }
         catch
         {
-         
-        }
-    }
-
-    private static void TryFallbackVibration()
-    {
-        try
-        {
-            Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(30));
-        }
-        catch
-        {
-
         }
     }
 }

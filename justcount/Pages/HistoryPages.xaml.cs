@@ -21,6 +21,7 @@ public partial class HistoryPage : ContentPage, INotifyPropertyChanged
     ];
 
     private readonly ExpenseDatabaseService _expenseDatabaseService;
+    private readonly ReminderNotificationService _reminderNotificationService;
     private DateTime _selectedDate = DateTime.Today;
     private DateTime _displayMonth = new(DateTime.Today.Year, DateTime.Today.Month, 1);
 
@@ -34,6 +35,7 @@ public partial class HistoryPage : ContentPage, INotifyPropertyChanged
     {
         InitializeComponent();
         _expenseDatabaseService = IPlatformApplication.Current!.Services.GetRequiredService<ExpenseDatabaseService>();
+        _reminderNotificationService = IPlatformApplication.Current!.Services.GetRequiredService<ReminderNotificationService>();
         BindingContext = this;
     }
 
@@ -117,6 +119,7 @@ public partial class HistoryPage : ContentPage, INotifyPropertyChanged
             Notes = noteInput.Trim()
         });
 
+        await _reminderNotificationService.RefreshTodaySummaryNotificationAsync();
         await RefreshCalendarAndExpensesAsync(clearStatus: false);
         ShowStatus("Expense added.", true);
     }
@@ -173,6 +176,7 @@ public partial class HistoryPage : ContentPage, INotifyPropertyChanged
         item.Date = _selectedDate;
 
         await _expenseDatabaseService.UpdateExpenseAsync(item);
+        await _reminderNotificationService.RefreshTodaySummaryNotificationAsync();
         await RefreshCalendarAndExpensesAsync(clearStatus: false);
         ShowStatus("Expense updated.", true);
     }
@@ -196,6 +200,7 @@ public partial class HistoryPage : ContentPage, INotifyPropertyChanged
         }
 
         await _expenseDatabaseService.DeleteExpenseAsync(item);
+        await _reminderNotificationService.RefreshTodaySummaryNotificationAsync();
         await RefreshCalendarAndExpensesAsync(clearStatus: false);
         ShowStatus("Expense deleted.", true);
     }

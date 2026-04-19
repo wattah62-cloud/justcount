@@ -1,5 +1,6 @@
 using justcount.Services;
 using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 
 namespace justcount;
 
@@ -11,6 +12,7 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
+            .UseLocalNotification()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -18,6 +20,7 @@ public static class MauiProgram
             });
 
         builder.Services.AddSingleton<ExpenseDatabaseService>();
+        builder.Services.AddSingleton<ReminderNotificationService>();
 
 #if DEBUG
         builder.Logging.AddDebug();

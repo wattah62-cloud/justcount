@@ -1,14 +1,16 @@
+using justcount.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using justcount.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace justcount.Pages;
 
 public partial class HomePage : ContentPage, INotifyPropertyChanged
 {
     private readonly ExpenseDatabaseService _expenseDatabaseService;
+    private readonly ReminderNotificationService _reminderNotificationService;
+    private bool _notificationInitialized;
     private string _monthlyExpenseText = "$0.00";
     private string _monthlyEntryCountText = "0";
 
@@ -51,6 +53,7 @@ public partial class HomePage : ContentPage, INotifyPropertyChanged
     {
         InitializeComponent();
         _expenseDatabaseService = IPlatformApplication.Current!.Services.GetRequiredService<ExpenseDatabaseService>();
+        _reminderNotificationService = IPlatformApplication.Current!.Services.GetRequiredService<ReminderNotificationService>();
         BindingContext = this;
     }
 
@@ -58,6 +61,15 @@ public partial class HomePage : ContentPage, INotifyPropertyChanged
     {
         base.OnAppearing();
         await RefreshSummaryAsync();
+
+        if (!_notificationInitialized)
+        {
+            _notificationInitialized = true;
+            await _reminderNotificationService.EnsurePermissionAsync();
+        }
+
+        await _reminderNotificationService.RefreshTodaySummaryNotificationAsync();
+
     }
 
     private async void OnAddExpenseClicked(object sender, EventArgs e)

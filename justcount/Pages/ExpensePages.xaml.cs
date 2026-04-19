@@ -8,11 +8,13 @@ namespace justcount.Pages;
 public partial class ExpensePage : ContentPage
 {
     private readonly ExpenseDatabaseService _expenseDatabaseService;
+    private readonly ReminderNotificationService _reminderNotificationService;
 
     public ExpensePage()
     {
         InitializeComponent();
         _expenseDatabaseService = IPlatformApplication.Current!.Services.GetRequiredService<ExpenseDatabaseService>();
+        _reminderNotificationService = IPlatformApplication.Current!.Services.GetRequiredService<ReminderNotificationService>();
 
         CategoryPicker.ItemsSource = new List<string>
         {
@@ -68,6 +70,7 @@ public partial class ExpensePage : ContentPage
         };
 
         await _expenseDatabaseService.AddExpenseAsync(item);
+        await _reminderNotificationService.RefreshTodaySummaryNotificationAsync();
 
         AmountEntry.Text = string.Empty;
         NotesEditor.Text = string.Empty;
